@@ -36,6 +36,34 @@ def update_secrets(key, value):
 
     return parsed_json
 
+def get_media_meta(access_token):
+    """Gets user media metadata."""
+    BASE_URL = f'https://graph.instagram.com/me/media?'
+    media_meta_params = {
+        'fields': 'id,caption',
+        'access_token': access_token
+    }
+
+    response = requests.get(BASE_URL, params=media_meta_params)
+    if response.status_code != 200:
+        print(response.text)
+    else:
+        return response.json()
+
+def get_media_contents(media_id, access_token):
+    """Gets pictures from user profile."""
+    BASE_URL = f'https://graph.instagram.com/{media_id}'
+    media_params = {
+        'fields': 'id,media_type,media_url,username,timestamp',
+        'access_token': access_token
+    }
+
+    media_response = requests.get(BASE_URL, params=media_params)
+    if media_response.status_code != 200:
+        print(media_response.text)
+    else:
+        return media_response.json()
+
 AUTH_URL = 'https://api.instagram.com/oauth/authorize'
 TOKEN_URL = 'https://api.instagram.com/oauth/access_token'
 
@@ -45,7 +73,7 @@ redirect_uri = get_secrets()['redirect_uri']
 account = get_secrets()['real_account']
 
 if 'long_token' not in get_secrets():
-    print(f'Requesting new access token for @{account}')
+    print('Requesting new access token.')
     auth_url = f'{AUTH_URL}?client_id={client_id}&redirect_uri={redirect_uri}&scope=user_profile,user_media&response_type=code'
     webbrowser.open(auth_url, new=1)
     authorization_code = input('Enter code in URL')
@@ -68,10 +96,10 @@ if 'long_token' not in get_secrets():
         update_secrets('access_token', access_token)
         update_secrets('user_id', user_id)
         print('Saved access token and user id.')
+        long_token = get_long_token(access_token, secret)
+        update_secrets('long_token', long_token)
 else:
     print(f'Access Token: {get_secrets()["access_token"]}')
     print(f'User ID: {get_secrets()["user_id"]}')
-    response = get_long_token(get_secrets()['access_token'], secret)
-    update_secrets('long_token', response)
-    print(response['access_token'])
-    print('Token Type:' + response['token_type'])
+    print(get_media_meta(get_secrets()['long_token']['access_token']))
+    print(get_media_contents('18019372519365816', get_secrets()['long_token']['access_token']))
