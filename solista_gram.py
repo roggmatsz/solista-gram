@@ -21,11 +21,13 @@ def get_long_token(short_token, client_secret):
     return long_token_response.json()
 
 def get_secrets():
+    """Gets contents of secrets.json file."""
     with open('secrets.json', 'r', encoding='utf-8') as secrets_file:
         parsed_secrets = json.load(secrets_file)
     return parsed_secrets
 
 def update_secrets(key, value):
+    """Updates values or creates new values in secrets.json file."""
     with open('secrets.json', 'r+', encoding='utf-8') as secrets_file:
         parsed_json = json.load(secrets_file)
         parsed_json.update({ key: value })
