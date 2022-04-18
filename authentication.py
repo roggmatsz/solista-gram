@@ -27,7 +27,7 @@ def get_browser_auth(client_id, redirect_uri, scope=None):
     AUTH_URL = 'https://api.instagram.com/oauth/authorize'
     scope_param = 'user_profile,user_media' if scope is None else scope
 
-    browser_url = f'{AUTH_URL}?client_id={client_id}&redirect_uri={redirect_uri}&scope={scope_param}'
+    browser_url = f'{AUTH_URL}?client_id={client_id}&redirect_uri={redirect_uri}&scope={scope_param}&response_type=code'
     webbrowser.open(browser_url, new=1)
 
     authorization_code = input('Enter authorization code:\n')
@@ -49,7 +49,7 @@ def get_access_token(client_id, client_secret, redirect_uri, auth_code):
         'code': auth_code
     }
 
-    response = requests.post(TOKEN_URL, params=params)
+    response = requests.post(TOKEN_URL, data=params)
     if response.status_code != 200:
         print(response.text)
         return ''
