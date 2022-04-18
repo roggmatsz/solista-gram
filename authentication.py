@@ -25,7 +25,7 @@ def get_browser_auth(client_id, redirect_uri, scope=None):
     """Temporary method used to get auth code from user."""
 
     AUTH_URL = 'https://api.instagram.com/oauth/authorize'
-    scope_param = 'user_profile,user_media' if scope == None else scope
+    scope_param = 'user_profile,user_media' if scope is None else scope
 
     browser_url = f'{AUTH_URL}?client_id={client_id}&redirect_uri={redirect_uri}&scope={scope_param}'
     webbrowser.open(browser_url, new=1)
@@ -54,4 +54,4 @@ def get_access_token(client_id, client_secret, redirect_uri, auth_code):
         print(response.text)
         return ''
 
-    return response.json()
+    return (response.json()['user_id'], response.json()['access_token'])
