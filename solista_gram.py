@@ -38,7 +38,7 @@ def update_secrets(key, value):
 
 def get_media_meta(access_token):
     """Gets user media metadata."""
-    BASE_URL = f'https://graph.instagram.com/me/media?'
+    BASE_URL = 'https://graph.instagram.com/me/media?'
     media_meta_params = {
         'fields': 'id,caption',
         'access_token': access_token
@@ -103,3 +103,8 @@ else:
     print(f'User ID: {get_secrets()["user_id"]}')
     print(get_media_meta(get_secrets()['long_token']['access_token']))
     print(get_media_contents('18019372519365816', get_secrets()['long_token']['access_token']))
+
+if __name__ == '__main__':
+    # unit testing suite goes here
+    print('This runs when file is executed as python file.py')
+    
